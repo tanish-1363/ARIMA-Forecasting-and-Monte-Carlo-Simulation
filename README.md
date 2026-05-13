@@ -9,7 +9,6 @@ This project is an institutional-grade quantitative pipeline designed to extract
 3. Mathematical Stationarity (ADF Testing) : Visual confirmation is insufficient for algorithmic modeling. The Augmented Dickey-Fuller (ADF) test is deployed across the raw data ($d=0$), first difference ($d=1$), and second difference ($d=2$) to mathematically prove at which integration level the data achieves strict stationarity.
 
 4. Algorithmic Model Fitting : With the integration order confirmed, the pipeline identifies the optimal Autoregressive ($p$) and Moving Average ($q$) parameters:
-
 a) ACF & PACF Analysis: Autocorrelation and Partial Autocorrelation plots are generated for both $d=1$ and $d=2$ to manually identify potential parameter bounds.<img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/dc54e189-b6f6-4320-8b8b-8df30d4ba0a5" />
 b) AIC & BIC Matrix: A grid search is executed, scoring multiple ARIMA configurations based on Akaike and Bayesian Information Criteria to find the mathematical optimum (penalizing for overfitting).
 c) auto.arima Verification: The manual grid search results are audited against the algorithmic output of the forecast::auto.arima() function to confirm the optimal model structures.(Three candidate models are selected for further testing: Model 1 [0,1,0], Model 2 [0,2,1], and Model 3 [2,1,0]).
