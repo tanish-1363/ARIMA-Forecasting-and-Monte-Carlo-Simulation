@@ -9,17 +9,15 @@ This project is an institutional-grade quantitative pipeline designed to extract
 3. Mathematical Stationarity (ADF Testing) : Visual confirmation is insufficient for algorithmic modeling. The Augmented Dickey-Fuller (ADF) test is deployed across the raw data ($d=0$), first difference ($d=1$), and second difference ($d=2$) to mathematically prove at which integration level the data achieves strict stationarity.
 
 4. Algorithmic Model Fitting : With the integration order confirmed, the pipeline identifies the optimal Autoregressive ($p$) and Moving Average ($q$) parameters:
-a) ACF & PACF Analysis: Autocorrelation and Partial Autocorrelation plots are generated for both $d=1$ and $d=2$ to manually identify potential parameter bounds.
-<img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/dc54e189-b6f6-4320-8b8b-8df30d4ba0a5" />
-b) AIC & BIC Matrix: A grid search is executed, scoring multiple ARIMA configurations based on Akaike and Bayesian Information Criteria to find the mathematical optimum (penalizing for overfitting).
 
+a) ACF & PACF Analysis: Autocorrelation and Partial Autocorrelation plots are generated for both $d=1$ and $d=2$ to manually identify potential parameter bounds.<img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/dc54e189-b6f6-4320-8b8b-8df30d4ba0a5" />
+b) AIC & BIC Matrix: A grid search is executed, scoring multiple ARIMA configurations based on Akaike and Bayesian Information Criteria to find the mathematical optimum (penalizing for overfitting).
 c) auto.arima Verification: The manual grid search results are audited against the algorithmic output of the forecast::auto.arima() function to confirm the optimal model structures.(Three candidate models are selected for further testing: Model 1 [0,1,0], Model 2 [0,2,1], and Model 3 [2,1,0]).
 
 5. Residual Diagnostics (Ljung-Box Test) : A forecasting model is only valid if it extracts all available market signal. The Ljung-Box test is applied to the residuals of the candidate models across lags 1 through 12. This verifies that the remaining errors are purely white noise, confirming the models are mathematically sound.
 
 6. In-Sample Percentage Error Analysis : Before out-of-sample testing, the baseline accuracy of the models is established. The absolute percentage error for each model is calculated, summarized, and plotted.
-<img width="1878" height="864" alt="image" src="https://github.com/user-attachments/assets/5763abd4-3317-46ed-bf1c-eb8d5d940054" />
-Crucial Finding: Analyzing the Max error column reveals that Model 2 ($d=2$) adapts to historical market shocks significantly better than models relying on historical drift.
+<img width="1878" height="864" alt="image" src="https://github.com/user-attachments/assets/5763abd4-3317-46ed-bf1c-eb8d5d940054" />Crucial Finding: Analyzing the Max error column reveals that Model 2 ($d=2$) adapts to historical market shocks significantly better than models relying on historical drift.
 
 7. Out-of-Sample Walk-Forward Backtesting : To test pure predictive skill without look-ahead bias, a 71-week, 1-step-ahead expanding window backtest is executed. The models organically ingest new data line-by-line.Metrics Tracked: RMSE, MAE, MAPE, ME, and Theil’s U.The Verdict: While Model 1 and 3 perform adequately on average errors, Model 2 [ARIMA(0,2,1)] achieves the superior Theil's U (0.9853). Given anticipated macroeconomic shocks, Model 2 is explicitly chosen as the production engine because it relies on momentum acceleration rather than historical drift, aggressively mapping structural breaks.
 <img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/204a9504-c635-4da4-91d6-da7087974ee2" />
