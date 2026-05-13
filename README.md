@@ -1,5 +1,4 @@
-# ARIMA-Forecasting-Monte-Carlo-Simulation
-Executive Summary
+#Executive Summary
 This project is an institutional-grade quantitative pipeline designed to extract the mathematical memory of the Nifty 50 Index, audit predictive algorithms, and simulate stochastic tail-risk.To ensure complete methodological integrity and zero data leakage, this codebase strictly separates historical signal extraction from future forecasting. The script and this documentation follow a linear, chronological 8-step pipeline.
 
 1. Baseline Market Visualization : The pipeline initializes by ingesting historical Nifty 50 Adj.Close data. The raw time series is plotted to visually confirm inherent non-stationarity, identifying the presence of long-term trends and volatility clustering before any mathematical transformations are applied.
@@ -26,3 +25,6 @@ This project is an institutional-grade quantitative pipeline designed to extract
 8. Stochastic Risk Modeling (Monte Carlo Simulation) : With Model 2 validated as the premier engine, it is deployed to map future tail-risk. 1,000 parallel market universes are simulated for a 12-week horizon. To perform a visual Out-of-Sample VaR (Value at Risk) audit, the actual unseen market values are plotted directly over the simulation.
 <img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/ba44bdf1-69e5-4255-afbf-bd74df39ec94" />
 The "Fat Tail" Reality : The 90% confidence interval successfully bounds the Nifty 50's trajectory across the majority of the horizon. However, the momentary, violent breach of the lower boundary by the actual market data mathematically demonstrates the "fat-tailed" nature of equity markets. It visually proves that while ARIMA models effectively map standard variance, real-world structural market crashes exceed standard Gaussian probabilities.
+
+Language : R
+Libraries : forecast, tseries
