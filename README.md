@@ -1,4 +1,4 @@
-#Executive Summary
+#Executive Summary#
 
 This project is an institutional-grade quantitative pipeline designed to extract the mathematical memory of the Nifty 50 Index, audit predictive algorithms, and simulate stochastic tail-risk. To ensure complete methodological integrity and zero data leakage, this codebase strictly separates historical signal extraction from future forecasting. The script and this documentation follow a linear, chronological 8-step pipeline.
 
