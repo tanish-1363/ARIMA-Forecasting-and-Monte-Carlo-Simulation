@@ -30,5 +30,6 @@ Testing Dataset (testdata.csv): January 7, 2025 — May 8, 2026. Data from Decem
 
 8. Stochastic Risk Modeling (Monte Carlo Simulation) : With Model 2 validated as the premier engine, it is deployed to map future tail-risk. 1,000 parallel market universes are simulated for a 12-week horizon. To perform a visual Out-of-Sample VaR (Value at Risk) audit, the actual unseen market values from the test set are plotted directly over the simulation.<img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/ba44bdf1-69e5-4255-afbf-bd74df39ec94" /> The "Fat Tail" Reality:The 90% confidence interval successfully bounds the Nifty 50's trajectory across the majority of the horizon. However, the momentary, violent breach of the lower boundary by the actual market data mathematically demonstrates the "fat-tailed" nature of equity markets. It visually proves that while ARIMA models effectively map standard variance, real-world structural market crashes exceed standard Gaussian probabilities.
 
-Language : R
-Libraries : forecast, tseries
+    Language : R
+
+   Libraries : forecast, tseries
