@@ -2,6 +2,7 @@
 library(tseries)   
 library(forecast)
 
+#loading the data 
 data <- read.csv(file.choose(),header=TRUE)
 
 par(mfrow=c(1,1))
@@ -161,6 +162,7 @@ round(summary(abs(pct_error_model3)),5)
 
 
 #One step forward forecasting and comparison with testdata 
+#loading the testdata
 testdata <- read.csv(file.choose(),header=TRUE)
 
 #Forecasting for model 1 : Arima(0,1,0)
