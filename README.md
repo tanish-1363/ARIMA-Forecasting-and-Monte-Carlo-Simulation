@@ -23,6 +23,7 @@ Testing Dataset (nifty test data.csv): January 7, 2025 — May 8, 2026. Data fro
    i) ACF & PACF Analysis: Autocorrelation and Partial Autocorrelation plots are generated for both $d=1$ and $d=2$ to manually identify potential parameter bounds. <img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/dc54e189-b6f6-4320-8b8b-8df30d4ba0a5" />
 
    ii)  AIC & BIC Matrix: A grid search is executed, scoring multiple ARIMA configurations based on Akaike and Bayesian Information Criteria to find the mathematical optimum (penalizing for overfitting).
+
 | **AIC Matrix for d=1** | | | | | | | | **BIC Matrix for d=1** | | | | | | |
 | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | 
 |  | q=0 | q=1 | q=2 | q=3 | q=4 | q=5 | | q=0 | q=1 | q=2 | q=3 | q=4 | q=5 |
