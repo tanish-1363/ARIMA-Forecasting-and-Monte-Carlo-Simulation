@@ -31,6 +31,8 @@ With the integration order confirmed on the pre-2025 training data, the pipeline
 **i) ACF & PACF Analysis:** Autocorrelation and Partial Autocorrelation plots are generated for both $d=1$ and $d=2$ to manually identify potential parameter bounds.
 <img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/dc54e189-b6f6-4320-8b8b-8df30d4ba0a5" />
 
+For $d=1$, the ACF and PACF plots show an immediate drop-off with virtually zero significant lags crossing the confidence thresholds. This mathematical lack of autocorrelation is the textbook signature of a Random Walk, giving us the strict baseline justification for our first candidate: **Model 1 - ARIMA(0,1,0)**. Conversely, the $d=2$ plots show specific structural spikes, hinting at the need for moving average ($q$) or autoregressive ($p$) terms to capture momentum.
+
 **ii) AIC & BIC Matrix:** A grid search is executed, scoring multiple ARIMA configurations based on Akaike and Bayesian Information Criteria to find the mathematical optimum (penalizing for overfitting).
 
 | **AIC Matrix for d=1** | | | | | | | | **BIC Matrix for d=1** | | | | | | |
@@ -52,6 +54,8 @@ With the integration order confirmed on the pre-2025 training data, the pipeline
 | p=3 | 12529.13 | 12356.48 | 12355.54 | 12360.50 | 12361.99 | 12364.07 | | p=3 | 12548.28 | 12380.42 | 12384.26 | 12394.00 | 12400.28 | 12407.15 |
 | p=4 | 12503.75 | 12358.34 | 12360.48 | 12361.73 | 12357.60 | 12359.07 | | p=4 | 12527.68 | 12387.06 | 12393.98 | 12400.03 | 12400.68 | 12406.94 |
 | p=5 | 12485.77 | 12360.07 | 12362.29 | 12359.41 | 12363.67 | 12359.52 | | p=5 | 12514.49 | 12393.58 | 12400.59 | 12402.49 | 12411.54 | 12412.18 |
+
+Complex models often overfit historical noise rather than extracting genuine market signal. By mathematically penalizing parameter complexity, the AIC/BIC matrices isolated the absolute global minimums. The lowest information loss scores converged tightly around the $(0,1,0)$, $(0,2,1)$, and $(2,1,0)$ coordinates, providing a purely data-driven shortlist.
 
 **iii) Algorithmic Verification:** The manual grid search results are audited against the output of the `forecast::auto.arima()` function to confirm the optimal model structures. 
 Three candidate models are selected for out-of-sample testing:
@@ -100,11 +104,11 @@ To test pure predictive skill, a 71-week, 1-step-ahead expanding window backtest
 | Model 3 | 11.37134 | 466.3588 | 347.9964 | 0.02618351 | 1.441482 | 0.1525857 | 1.004965 | 
 
 <img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/204a9504-c635-4da4-91d6-da7087974ee2" />
-While Model 1 and 3 perform adequately on average errors, Model 2 ($ARIMA(0,2,1)$) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). Given anticipated macroeconomic shocks, **Model 2 is explicitly chosen as the production engine** because it relies on momentum acceleration rather than historical drift, aggressively mapping structural breaks.
+While Model 1 and 3 perform adequately on average errors, Model 2 ARIMA(0,2,1) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). Given anticipated macroeconomic shocks, **Model 2 is explicitly chosen as the production engine** because it relies on momentum acceleration rather than historical drift, aggressively mapping structural breaks.
 
 ### 8. Stochastic Risk Modeling (Monte Carlo Simulation) 
 With Model 2 validated as the premier engine, it is deployed to map future tail-risk. 1,000 parallel market universes are simulated for a 12-week horizon. To perform a visual Out-of-Sample VaR (Value at Risk) audit, the actual unseen market values from the test set are plotted directly over the simulation.
-<img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/ba44bdf1-69e5-4255-afbf-bd74df39ec94" /> > **The "Fat Tail" Reality:** The 90% confidence interval successfully bounds the Nifty 50's trajectory across the majority of the horizon. However, the momentary, violent breach of the lower boundary by the actual market data mathematically demonstrates the **"fat-tailed"** nature of equity markets. It visually proves that while ARIMA models effectively map standard variance, real-world structural market crashes exceed standard Gaussian probabilities, justifying the need for advanced Extreme Value Theory (EVT) in future iterations.
+<img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/ba44bdf1-69e5-4255-afbf-bd74df39ec94" /> > **The Fat Tail Reality:** The 90% confidence interval successfully bounds the Nifty 50's trajectory across the majority of the horizon. However, the momentary, violent breach of the lower boundary by the actual market data mathematically demonstrates the **fat-tailed** nature of equity markets. It visually proves that while ARIMA models effectively map standard variance, real-world structural market crashes exceed standard Gaussian probabilities, justifying the need for advanced Extreme Value Theory (EVT) in future iterations.
 
 **Language:** R
 **Libraries:** `forecast`, `tseries`
