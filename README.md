@@ -24,7 +24,7 @@ Testing Dataset (nifty test data.csv): January 7, 2025 — May 8, 2026. Data fro
 
    ii)  AIC & BIC Matrix: A grid search is executed, scoring multiple ARIMA configurations based on Akaike and Bayesian Information Criteria to find the mathematical optimum (penalizing for overfitting).
 
-| **AIC Matrix for d=1** | | | | | | **BIC Matrix for d=1** | | | | | | |
+| **AIC Matrix for d=1** | | | | | | | | **BIC Matrix for d=1** | | | | | | |
 | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | 
 |  | q=0 | q=1 | q=2 | q=3 | q=4 | q=5 | | | q=0 | q=1 | q=2 | q=3 | q=4 | q=5 | 
 | p=0 | 12362.21 | 12364.11 | 12364.93 | 12366.41 | 12367.93 | 12369.87 | | p=0 | 12366.99 | 12373.69 | 12379.29 | 12385.57 | 12391.87 | 12398.60 |
