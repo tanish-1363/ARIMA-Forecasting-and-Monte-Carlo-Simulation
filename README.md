@@ -22,6 +22,7 @@ Visual confirmation is insufficient for algorithmic modeling. The Augmented Dick
 |  | d=0 | d=1 | d=2 |
 | :--------: | :--------: | :--------: | :--------: |
 | P-Value | 0.7633 | 0.01 | 0.01 |
+
 The raw data fails the stationarity threshold ($P > 0.05$). However, differencing at both $d=1$ and $d=2$ yields a p-value of 0.01, mathematically rejecting the null hypothesis of a unit root and confirming strict stationarity for autoregressive modeling.
 
 ### 4. Algorithmic Model Fitting 
@@ -75,6 +76,7 @@ A forecasting model is only valid if it extracts all available market signal. Th
 | lag=10 | 0.7916540 | 0.7308207 | 0.8812571 |
 | lag=11 | 0.8154456 | 0.7730395 | 0.9022298 |
 | lag=12 | 0.8674843 | 0.8352408 | 0.9323718 
+
 Across all 12 lags, every p-value vastly exceeds the 0.05 threshold. This verifies that the remaining errors are purely white noise, confirming the models are mathematically sound and no predictive signal has been left on the table.
 
 ### 6. In-Sample Percentage Error Analysis 
@@ -85,6 +87,7 @@ Before out-of-sample testing, the baseline accuracy of the models is established
 | Model 1 | 0.0005 | 0.7415 | 1.5103 | 2.0837 | 2.6897 | 23.7144 |
 | Model 2 | 0.00023 | 0.72515 | 1.51163 | 2.09959 | 2.71627 | 20.87352 |
 | Model 3 | 0.00317 | 0.69064 | 1.47889 | 2.06593 | 2.64602 | 24.57292 |
+
 While average errors remain similar across the board, analyzing the Max Error column reveals that **Model 2 ($d=2$) adapts to historical market shocks significantly better**, reducing maximum downside forecast error by nearly 3-4% compared to models relying on historical drift.
 
 ### 7. Out-of-Sample Walk-Forward Backtesting (2025 - 2026 Data) 
