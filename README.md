@@ -49,13 +49,28 @@ Testing Dataset (nifty test data.csv): January 7, 2025 — May 8, 2026. Data fro
 
 6. Residual Diagnostics (Ljung-Box Test) : A forecasting model is only valid if it extracts all available market signal. The Ljung-Box test is applied to the residuals of the candidate models across lags 1 through 12. This verifies that the remaining errors are purely white noise, confirming the models are mathematically sound.
 
-7. In-Sample Percentage Error Analysis : Before out-of-sample testing, the baseline accuracy of the models is established. The absolute percentage error for each model is calculated, summarized, and plotted.<img width="1878" height="864" alt="image" src="https://github.com/user-attachments/assets/5763abd4-3317-46ed-bf1c-eb8d5d940054" /> Crucial Finding: Analyzing the Max error column reveals that Model 2 ($d=2$) adapts to historical market shocks significantly better than models relying on historical drift.
+| | Pvalue Model 1 | Pvalue Model 2 | Pvalue Model 3 |
+| :--------: | :--------: | :--------: | :--------: |
+| lag=1 | 0.6214884 | 0.5014497 | 0.9854807 |
+| lag=2 | 0.5813448 | 0.5968052 | 0.9995973 |
+| lag=3 | 0.7256440 | 0.7696152 | 0.9629399 |
+| lag=4 | 0.8242606 | 0.8727575 | 0.9763112 |
+| lag=5 | 0.8876187 | 0.9002415 | 0.9851889 |
+| lag=6 | 0.9365100 | 0.9330611 | 0.9928795 |
+| lag=7 | 0.9012372 | 0.8666764 | 0.9677287 |
+| lag=8 | 0.9349256 | 0.9007932 | 0.9816127 |
+| lag=9 | 0.9082417 | 0.8821703 | 0.9644252 |
+| lag=10 | 0.7916540 | 0.7308207 | 0.8812571 |
+| lag=11 | 0.8154456 | 0.7730395 | 0.9022298 |
+| lag=12 | 0.8674843 | 0.8352408 | 0.9323718 |
 
-8. Out-of-Sample Walk-Forward Backtesting (2025 - 2026 Data) : To test pure predictive skill, a 71-week, 1-step-ahead expanding window backtest is executed across the blind testdata.csv. The models organically ingest new data line-by-line.
+8. In-Sample Percentage Error Analysis : Before out-of-sample testing, the baseline accuracy of the models is established. The absolute percentage error for each model is calculated, summarized, and plotted.<img width="1878" height="864" alt="image" src="https://github.com/user-attachments/assets/5763abd4-3317-46ed-bf1c-eb8d5d940054" /> Crucial Finding: Analyzing the Max error column reveals that Model 2 ($d=2$) adapts to historical market shocks significantly better than models relying on historical drift.
+
+9. Out-of-Sample Walk-Forward Backtesting (2025 - 2026 Data) : To test pure predictive skill, a 71-week, 1-step-ahead expanding window backtest is executed across the blind testdata.csv. The models organically ingest new data line-by-line.
 Metrics Tracked: RMSE, MAE, MAPE, ME, and Theil’s U.
 The Verdict: While Model 1 and 3 perform adequately on average errors, Model 2 [ARIMA(0,2,1)] achieves the superior Theil's U (0.9853). Given anticipated macroeconomic shocks, Model 2 is explicitly chosen as the production engine because it relies on momentum acceleration rather than historical drift, aggressively mapping structural breaks.<img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/204a9504-c635-4da4-91d6-da7087974ee2" />
 
-9. Stochastic Risk Modeling (Monte Carlo Simulation) : With Model 2 validated as the premier engine, it is deployed to map future tail-risk. 1,000 parallel market universes are simulated for a 12-week horizon. To perform a visual Out-of-Sample VaR (Value at Risk) audit, the actual unseen market values from the test set are plotted directly over the simulation.<img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/ba44bdf1-69e5-4255-afbf-bd74df39ec94" /> The "Fat Tail" Reality:The 90% confidence interval successfully bounds the Nifty 50's trajectory across the majority of the horizon. However, the momentary, violent breach of the lower boundary by the actual market data mathematically demonstrates the "fat-tailed" nature of equity markets. It visually proves that while ARIMA models effectively map standard variance, real-world structural market crashes exceed standard Gaussian probabilities.
+10. Stochastic Risk Modeling (Monte Carlo Simulation) : With Model 2 validated as the premier engine, it is deployed to map future tail-risk. 1,000 parallel market universes are simulated for a 12-week horizon. To perform a visual Out-of-Sample VaR (Value at Risk) audit, the actual unseen market values from the test set are plotted directly over the simulation.<img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/ba44bdf1-69e5-4255-afbf-bd74df39ec94" /> The "Fat Tail" Reality:The 90% confidence interval successfully bounds the Nifty 50's trajectory across the majority of the horizon. However, the momentary, violent breach of the lower boundary by the actual market data mathematically demonstrates the "fat-tailed" nature of equity markets. It visually proves that while ARIMA models effectively map standard variance, real-world structural market crashes exceed standard Gaussian probabilities.
 
 Language : R
 
