@@ -1,8 +1,3 @@
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
 This project is an institutional-grade quantitative pipeline designed to extract the mathematical memory of the Nifty 50 Index, audit predictive algorithms, and simulate stochastic tail-risk. To ensure complete methodological integrity and zero data leakage, this codebase strictly separates historical signal extraction from future forecasting. The script and this documentation follow a linear, chronological 8-step pipeline.
 
 Data Architecture & Splitting Strategy : To rigorously test the model's out-of-sample predictive power, the dataset was strictly partitioned to prevent any forward-looking bias (look-ahead leakage).
@@ -18,6 +13,7 @@ Testing Dataset (nifty test data.csv): January 7, 2025 — May 8, 2026. Data fro
 <img width="1603" height="795" alt="image" src="https://github.com/user-attachments/assets/4e433ec3-e9f2-4b88-b19d-caec52a7e0e9" />
 
 3. Mathematical Stationarity (ADF Testing) : Visual confirmation is insufficient for algorithmic modeling. The Augmented Dickey-Fuller (ADF) test is deployed across the raw data ($d=0$), first difference ($d=1$), and second difference ($d=2$) to mathematically prove at which integration level the data achieves strict stationarity.
+
 | a | d=0 | d=1 | d=2 |
 | :--------: | :--------: | :--------: | :--------: |
 | P-Value | 0.7633 | 0.01 | 0.01 |
