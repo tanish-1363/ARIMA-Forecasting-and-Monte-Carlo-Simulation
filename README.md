@@ -1,18 +1,21 @@
-Executive Summary
-
 This project is an institutional-grade quantitative pipeline designed to extract the mathematical memory of the Nifty 50 Index, audit predictive algorithms, and simulate stochastic tail-risk. To ensure complete methodological integrity and zero data leakage, this codebase strictly separates historical signal extraction from future forecasting. The script and this documentation follow a linear, chronological 8-step pipeline.
 
 Data Architecture & Splitting Strategy : To rigorously test the model's out-of-sample predictive power, the dataset was strictly partitioned to prevent any forward-looking bias (look-ahead leakage).
 
-Training Dataset (data.csv): January 1, 2008 — December 31, 2024. This 16-year dataset acts as the model's foundational memory, encompassing multiple macro-cycles, crashes, and bull runs. All algorithm fitting, parameter tuning, and residual diagnostics were locked in using only this data.
+Training Dataset (nifty data.csv): January 1, 2008 — December 31, 2024. This 17-year dataset acts as the model's foundational memory, encompassing multiple macro-cycles, crashes, and bull runs. All algorithm fitting, parameter tuning, and residual diagnostics were locked in using only this data.
 
-Testing Dataset (testdata.csv): January 7, 2025 — May 8, 2026. Data from December 31st onwards acts as the absolute blind test. The model was forced to predict these 71 weeks line-by-line without ever seeing them during the training phase.
+Testing Dataset (nifty test data.csv): January 7, 2025 — May 8, 2026. Data from December 31st onwards acts as the absolute blind test. The model was forced to predict these 71 weeks line-by-line without ever seeing them during the training phase.
 
 1. Baseline Market Visualization : The pipeline initializes by ingesting historical Nifty 50 Adj.Close data. The raw time series is plotted to visually confirm inherent non-stationarity, identifying the presence of long-term trends and volatility clustering before any mathematical transformations are applied.
+<img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/b391616d-8cb9-4fd5-bdfe-a06d04ac1048" />
 
 2. Variance Stabilization (Differencing: $d=1$ and $d=2$) : To prepare the data for autoregressive modeling, the trend component must be neutralized. The script computes and visually plots the first-order difference ($d=1$, representing velocity/returns) and the second-order difference ($d=2$, representing momentum/acceleration) to observe variance stabilization.
+<img width="1603" height="795" alt="image" src="https://github.com/user-attachments/assets/4e433ec3-e9f2-4b88-b19d-caec52a7e0e9" />
 
 3. Mathematical Stationarity (ADF Testing) : Visual confirmation is insufficient for algorithmic modeling. The Augmented Dickey-Fuller (ADF) test is deployed across the raw data ($d=0$), first difference ($d=1$), and second difference ($d=2$) to mathematically prove at which integration level the data achieves strict stationarity.
+|  | d=0 | d=1 | d=2 |
+| -------- | -------- | -------- | -------- |
+| P-Value | 0.7633 | 0.01 | 0.01 |
 
 4. Algorithmic Model Fitting : With the integration order confirmed on the pre-2025 training data, the pipeline identifies the optimal Autoregressive ($p$) and Moving Average ($q$) parameters:
 
