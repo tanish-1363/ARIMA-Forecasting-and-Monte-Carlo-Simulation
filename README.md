@@ -14,7 +14,7 @@ Testing Dataset (nifty test data.csv): January 7, 2025 — May 8, 2026. Data fro
 
 3. Mathematical Stationarity (ADF Testing) : Visual confirmation is insufficient for algorithmic modeling. The Augmented Dickey-Fuller (ADF) test is deployed across the raw data ($d=0$), first difference ($d=1$), and second difference ($d=2$) to mathematically prove at which integration level the data achieves strict stationarity.
 | a | d=0 | d=1 | d=2 |
-| -------- | -------- | -------- | -------- |
+| :--------: | :--------: | :--------: | :--------: |
 | P-Value | 0.7633 | 0.01 | 0.01 |
 
 4. Algorithmic Model Fitting : With the integration order confirmed on the pre-2025 training data, the pipeline identifies the optimal Autoregressive ($p$) and Moving Average ($q$) parameters:
