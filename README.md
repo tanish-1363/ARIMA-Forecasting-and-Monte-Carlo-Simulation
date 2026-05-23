@@ -45,7 +45,7 @@ Testing Dataset (nifty test data.csv): January 7, 2025 — May 8, 2026. Data fro
 | p=5 | 12485.77 | 12360.07 | 12362.29 | 12359.41 | 12363.67 | 12359.52 | | p=5 | 12514.49 | 12393.58 | 12400.59 | 12402.49 | 12411.54 | 12412.18 |
 
    iii) auto.arima Verification: The manual grid search results are audited against the algorithmic output of the forecast::auto.arima() function to confirm the optimal model structures.
-   (Three candidate models are selected for further testing: Model 1 [0,1,0], Model 2 [0,2,1], and Model 3 [2,1,0]).
+   (Three candidate models are selected for further testing: Model 1 [0,1,0], Model 2 [0,2,1], and Model 3 [2,1,0] with drift).
 
 6. Residual Diagnostics (Ljung-Box Test) : A forecasting model is only valid if it extracts all available market signal. The Ljung-Box test is applied to the residuals of the candidate models across lags 1 through 12. This verifies that the remaining errors are purely white noise, confirming the models are mathematically sound.
 
@@ -65,6 +65,15 @@ Testing Dataset (nifty test data.csv): January 7, 2025 — May 8, 2026. Data fro
 | lag=12 | 0.8674843 | 0.8352408 | 0.9323718 |
 
 8. In-Sample Percentage Error Analysis : Before out-of-sample testing, the baseline accuracy of the models is established. The absolute percentage error for each model is calculated, summarized, and plotted.<img width="1878" height="864" alt="image" src="https://github.com/user-attachments/assets/5763abd4-3317-46ed-bf1c-eb8d5d940054" /> Crucial Finding: Analyzing the Max error column reveals that Model 2 ($d=2$) adapts to historical market shocks significantly better than models relying on historical drift.
+
+| Min | 1st Quartile | Median | Mean | 3rd Quartile | Max | 
+| :--------: | :--------: | :--------: | :--------: | :--------: | :--------: |
+| | **Model 1** | **ARIMA(0,1,0)**| | | |
+| 0.0005 | 0.7415 | 1.5103 | 2.0837 | 2.6897 | 23.7144 |
+| | **Model 2** | **ARIMA(0,2,1)**| | | |
+| 0.00023 | 0.72515 | 1.51163 | 2.09959 | 2.71627 | 20.87352 |
+| | **Model 3** | **ARIMA(2,1,0)**| | | |
+| 0.00317 | 0.69064 | 1.47889 | 2.06593 | 2.64602 | 24.57292 |
 
 9. Out-of-Sample Walk-Forward Backtesting (2025 - 2026 Data) : To test pure predictive skill, a 71-week, 1-step-ahead expanding window backtest is executed across the blind testdata.csv. The models organically ingest new data line-by-line.
 Metrics Tracked: RMSE, MAE, MAPE, ME, and Theil’s U.
