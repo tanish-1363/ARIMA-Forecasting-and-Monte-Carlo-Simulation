@@ -23,6 +23,13 @@ Testing Dataset (nifty test data.csv): January 7, 2025 — May 8, 2026. Data fro
    i) ACF & PACF Analysis: Autocorrelation and Partial Autocorrelation plots are generated for both $d=1$ and $d=2$ to manually identify potential parameter bounds. <img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/dc54e189-b6f6-4320-8b8b-8df30d4ba0a5" />
 
    ii)  AIC & BIC Matrix: A grid search is executed, scoring multiple ARIMA configurations based on Akaike and Bayesian Information Criteria to find the mathematical optimum (penalizing for overfitting).
+|  | q=0 | q=1 | q=2 | q=3 | q=4 | q=5 |
+| p=0 | 12362.21 | 12364.11 | 12364.93 | 12366.41 | 12367.93 | 12369.87 |
+| p=1 | 12364.11 | 12362.77 | 12366.31 | 12365.73 | 12367.49 | 12369.24 |
+| p=2 | 12364.91 | 12366.36 | 12369.46 | 12371.27 | 12371.87 | 12373.86 |
+| p=3 | 12366.42 | 12368.25 | 12367.51 | 12369.32 | 12367.40 | 12369.29 |
+| p=4 | 12368.04 | 12370.00 | 12366.27 | 12373.35 | 12373.36 | 12369.77 |
+| p=5 | 12369.95 | 12371.97 | 12359.72 | 12366.96 | 12370.24 | 12365.95 |
 
    iii) auto.arima Verification: The manual grid search results are audited against the algorithmic output of the forecast::auto.arima() function to confirm the optimal model structures.
    (Three candidate models are selected for further testing: Model 1 [0,1,0], Model 2 [0,2,1], and Model 3 [2,1,0]).
