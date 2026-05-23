@@ -74,6 +74,7 @@ Testing Dataset (nifty test data.csv): January 7, 2025 — May 8, 2026. Data fro
 
 9. Out-of-Sample Walk-Forward Backtesting (2025 - 2026 Data) : To test pure predictive skill, a 71-week, 1-step-ahead expanding window backtest is executed across the blind niftytestdata.csv. The models organically ingest new data line-by-line.
 Metrics Tracked: RMSE, MAE, MAPE, ME, and Theil’s U.
+
 | | Mean Error | Root Mean Square Error | Mean Absolute Error | Mean Percentage Error | Mean Absolute Percentage Error | ACF 1 | Theil's U |
 | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: |
 | Model 1 | -7.888732 | 462.4058 | 347.8746 | -0.05189504 | 1.442589 | 0.1372903 | 0.9896478 |
