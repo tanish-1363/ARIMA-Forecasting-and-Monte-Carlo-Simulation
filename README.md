@@ -55,9 +55,10 @@ For $d=1$, the ACF and PACF plots show an immediate drop-off with virtually zero
 | p=4 | 12503.75 | 12358.34 | 12360.48 | 12361.73 | 12357.60 | 12359.07 | | p=4 | 12527.68 | 12387.06 | 12393.98 | 12400.03 | 12400.68 | 12406.94 |
 | p=5 | 12485.77 | 12360.07 | 12362.29 | 12359.41 | 12363.67 | 12359.52 | | p=5 | 12514.49 | 12393.58 | 12400.59 | 12402.49 | 12411.54 | 12412.18 |
 
-Complex models often overfit historical noise rather than extracting genuine market signal. By mathematically penalizing parameter complexity, the AIC/BIC matrices isolated the absolute global minimums. The lowest information loss scores converged tightly around the $(0,1,0)$, $(0,2,1)$, and $(2,1,0)$ coordinates, providing a purely data-driven shortlist.
+To prevent overfitting, AIC and BIC metrics mathematically penalize complexity. The grid proved that **$ARIMA(0,2,1)$** achieved the absolute lowest scores across the board.
 
 **iii) Algorithmic Verification:** The manual grid search results are audited against the output of the `forecast::auto.arima()` function to confirm the optimal model structures. 
+
 Three candidate models are selected for out-of-sample testing:
 * **Model 1:** $ARIMA(0,1,0)$
 * **Model 2:** $ARIMA(0,2,1)$
