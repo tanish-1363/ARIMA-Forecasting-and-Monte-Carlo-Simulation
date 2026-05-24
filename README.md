@@ -105,7 +105,7 @@ To test pure predictive skill, a 71-week, 1-step-ahead expanding window backtest
 | Model 3 | 11.37134 | 466.3588 | 347.9964 | 0.02618351 | 1.441482 | 0.1525857 | 1.004965 | 
 
 <img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/204a9504-c635-4da4-91d6-da7087974ee2" />
-While Model 1 and 3 perform adequately on average errors, Model 2 ARIMA(0,2,1) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). Given anticipated macroeconomic shocks, **Model 2 is explicitly chosen as the production engine** because it relies on momentum acceleration rather than historical drift, aggressively mapping structural breaks.
+While Model 1 and 3 perform adequately on average errors, Model 2 ARIMA(0,2,1) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). Given anticipated macroeconomic shocks, Model 2 is explicitly chosen as the production engine because it relies on momentum acceleration rather than historical drift, aggressively mapping structural breaks.
 
 ### 8. Stochastic Risk Modeling (Monte Carlo Simulation) 
 With Model 2 validated as the premier engine, it is deployed to map future tail-risk. 1,000 parallel market universes are simulated for a 12-week horizon. To perform a visual Out-of-Sample VaR (Value at Risk) audit, the actual unseen market values from the test set are plotted directly over the simulation.
