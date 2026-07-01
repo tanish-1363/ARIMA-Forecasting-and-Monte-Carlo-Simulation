@@ -1,39 +1,37 @@
-This project is an institutional-grade quantitative pipeline designed to extract the mathematical memory of the Nifty 50 Index, audit predictive algorithms, and simulate stochastic tail-risk. To ensure complete methodological integrity and zero data leakage, this codebase strictly separates historical signal extraction from future forecasting. The script and this documentation follow a linear, chronological 8-step pipeline.
+This project is a quantitative forecasting for the Nifty 50 Index. The objective was not just to predict a single future price, but to map out market variance and test how autoregressive integrated moving average (ARIMA) models handle real-world tail risk. To ensure the backtesting remained strictly honest, the data was separated to prevent any forward-looking bias.
 
-### Data Architecture & Splitting Strategy 
+### Data Strategy 
 To rigorously test the model's out-of-sample predictive power, the dataset was strictly partitioned to prevent any forward-looking bias (look-ahead leakage).
-* **Training Dataset (`nifty_data.csv`):** January 1, 2008 — December 31, 2024. This 17-year dataset acts as the model's foundational memory, encompassing multiple macro-cycles, crashes, and bull runs. All algorithm fitting, parameter tuning, and residual diagnostics were locked in using only this data.
-* **Testing Dataset (`nifty_test_data.csv`):** January 7, 2025 — May 8, 2026. Data from December 31st onwards acts as the absolute blind test. The model was forced to predict these 71 weeks line-by-line without ever seeing them during the training phase.
-
+* **Training Dataset (`nifty_data.csv`):** January 1, 2008 — December 31, 2024. 17 years of weekly data used exclusively to train the model, capture market movements, and determine parameters.
+* **Testing Dataset (`nifty_test_data.csv`):** January 7, 2025 — May 8, 2026. 71 weeks of blind data utilized to test the model's appropriateness and predictiveness on an unseen timeline.
 ---
 
-### 1. Baseline Market Visualization 
-The pipeline initializes by ingesting historical Nifty 50 Adj.Close data. The raw time series is plotted to visually confirm inherent non-stationarity, identifying the presence of long-term trends and volatility clustering before any mathematical transformations are applied.
+### 1. Visualizing the Baseline
+The process began by plotting the raw weekly Nifty 50 data. As expected, the stock market trends upwards over time and exhibits periods of high volatility which indicates the data is "non-stationary"—meaning it is not yet stable enough to build a reliable forecasting model.
 <img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/b391616d-8cb9-4fd5-bdfe-a06d04ac1048" />
 
-### 2. Variance Stabilization (Differencing: $d=1$ and $d=2$) 
-To prepare the data for autoregressive modeling, the trend component must be neutralized. The script computes and visually plots the first-order difference ($d=1$, representing velocity/returns) and the second-order difference ($d=2$, representing momentum/acceleration) to observe variance stabilization.
+### 2. Stabilizing the Data (Differencing: $d=1$ and $d=2$) 
+To prepare the data for modeling, the trend component must be neutralized through differencing. The first-order difference ($d=1$) and the second-order difference ($d=2$) were analyzed.
 
 <img width="1603" height="795" alt="image" src="https://github.com/user-attachments/assets/4e433ec3-e9f2-4b88-b19d-caec52a7e0e9" />
 
 ### 3. Mathematical Stationarity (ADF Testing) 
-Visual confirmation is insufficient for algorithmic modeling. The Augmented Dickey-Fuller (ADF) test is deployed across the raw data ($d=0$), first difference ($d=1$), and second difference ($d=2$) to mathematically prove at which integration level the data achieves strict stationarity.
+Visual confirmation is insufficient for algorithmic modeling. The Augmented Dickey-Fuller (ADF) test is deployed across the raw data ($d=0$), first difference ($d=1$), and second difference ($d=2$) to mathematically prove at which level the data achieves strict stationarity.
 
 |  | d=0 | d=1 | d=2 |
 | :--------: | :--------: | :--------: | :--------: |
 | P-Value | 0.7633 | 0.01 | 0.01 |
 
-The raw data fails the stationarity threshold ($P > 0.05$). However, differencing at both $d=1$ and $d=2$ yields a p-value of 0.01, mathematically rejecting the null hypothesis of a unit root and confirming strict stationarity for autoregressive modeling.
+The raw data fails the stationarity threshold ($P > 0.05$). However, differencing at both $d=1$ and $d=2$ yields a p-value of 0.01, mathematically rejecting the null hypothesis and confirming strict stationarity for modeling.
 
-### 4. Algorithmic Model Fitting 
-With the integration order confirmed on the pre-2025 training data, the pipeline identifies the optimal Autoregressive ($p$) and Moving Average ($q$) parameters:
+### 4. Model Fitting 
 
 **i) ACF & PACF Analysis:** Autocorrelation and Partial Autocorrelation plots are generated for both $d=1$ and $d=2$ to manually identify potential parameter bounds.
 <img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/dc54e189-b6f6-4320-8b8b-8df30d4ba0a5" />
 
-For $d=1$, the ACF and PACF plots show an immediate drop-off with virtually zero significant lags crossing the confidence thresholds. This mathematical lack of autocorrelation is the textbook signature of a Random Walk, giving us the strict baseline justification for our first candidate: **Model 1 - ARIMA(0,1,0)**. Conversely, the $d=2$ plots show specific structural spikes, hinting at the need for moving average ($q$) or autoregressive ($p$) terms to capture momentum.
+For $d=1$, the ACF and PACF plots show zero lingering patterns. This is the classic sign of a "random walk," setting up the baseline model: **Model 1 - ARIMA(0,1,0)**. Conversely, the $d=2$ plots show specific structural spikes, hinting at the need for moving average ($q$) or autoregressive ($p$) terms to capture momentum.
 
-**ii) AIC & BIC Matrix:** A grid search is executed, scoring multiple ARIMA configurations based on Akaike and Bayesian Information Criteria to find the mathematical optimum (penalizing for overfitting).
+**ii) AIC & BIC Matrix:** To ensure accuracy, a grid search was executed to test multiple model combinations. These were scored using AIC and BIC values, which penalize models for being overly complicated.
 
 | **AIC Matrix for d=1** | | | | | | | | **BIC Matrix for d=1** | | | | | | |
 | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | 
@@ -55,7 +53,7 @@ For $d=1$, the ACF and PACF plots show an immediate drop-off with virtually zero
 | p=4 | 12503.75 | 12358.34 | 12360.48 | 12361.73 | 12357.60 | 12359.07 | | p=4 | 12527.68 | 12387.06 | 12393.98 | 12400.03 | 12400.68 | 12406.94 |
 | p=5 | 12485.77 | 12360.07 | 12362.29 | 12359.41 | 12363.67 | 12359.52 | | p=5 | 12514.49 | 12393.58 | 12400.59 | 12402.49 | 12411.54 | 12412.18 |
 
-To prevent overfitting, AIC and BIC metrics mathematically penalize complexity. The grid proved that **$ARIMA(0,2,1)$** achieved the absolute lowest scores across the board.
+The grid shows that **$ARIMA(0,2,1)$** achieved the lowest scores.
 
 **iii) Algorithmic Verification:** The manual grid search results are audited against the output of the `forecast::auto.arima()` function to confirm the optimal model structures. 
 
