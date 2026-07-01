@@ -55,7 +55,7 @@ For $d=1$, the ACF and PACF plots show zero lingering patterns. This is the clas
 
 The grid shows that **$ARIMA(0,2,1)$** achieved the lowest scores.
 
-**iii) Algorithmic Verification:** The manual grid search results are audited against the output of the `forecast::auto.arima()` function to confirm the optimal model structures. 
+**iii) Algorithmic Selection:** The auto.arima() command was utilized to programmatically find the most suitable model 
 
 Three candidate models are selected for out-of-sample testing:
 * **Model 1:** $ARIMA(0,1,0)$
@@ -82,8 +82,8 @@ A forecasting model is only valid if it extracts all available market signal. Th
 
 Across all 12 lags, every p-value vastly exceeds the 0.05 threshold. This verifies that the remaining errors are purely white noise, confirming the models are mathematically sound and no predictive signal has been left on the table.
 
-### 6. In-Sample Percentage Error Analysis 
-Before out-of-sample testing, the baseline accuracy of the models is established. The absolute percentage error for each model is calculated, summarized, and plotted.
+### 6. Accuracy Check  
+Before testing against unseen future data, the models' accuracy on the historical training data was assessed and the absolute percentage error for each model is calculated, summarized, and plotted.
 <img width="1878" height="864" alt="image" src="https://github.com/user-attachments/assets/5763abd4-3317-46ed-bf1c-eb8d5d940054" /> 
 | | Min | 1st Quartile | Median | Mean | 3rd Quartile | Max | 
 | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: |
@@ -91,10 +91,10 @@ Before out-of-sample testing, the baseline accuracy of the models is established
 | Model 2 | 0.00023 | 0.72515 | 1.51163 | 2.09959 | 2.71627 | 20.87352 |
 | Model 3 | 0.00317 | 0.69064 | 1.47889 | 2.06593 | 2.64602 | 24.57292 |
 
-While average errors remain similar across the board, analyzing the Max Error column reveals that **Model 2 ($d=2$) adapts to historical market shocks significantly better**, reducing maximum downside forecast error by nearly 3-4% compared to models relying on historical drift.
+While average errors remained similar across all candidates, an analysis of the "Max" column reveals that Model 2 [ARIMA(0,2,1)] handled extreme historical market shocks significantly better than the alternatives.
 
-### 7. Out-of-Sample Walk-Forward Backtesting (2025 - 2026 Data) 
-To test pure predictive skill, a 71-week, 1-step-ahead expanding window backtest is executed across the blind `nifty_test_data.csv`. The models organically ingest new data line-by-line.
+### 7. Out-of-Sample Backtesting (2025 - 2026 Data) 
+To evaluate true predictive skill, a 71-week walk-forward backtest was executed across the blind dataset `nifty_test_data.csv`. The models organically ingested new data step-by-step.
 
 | | Mean Error | Root Mean Square Error | Mean Absolute Error | Mean Percentage Error | Mean Absolute Percentage Error | ACF 1 | Theil's U |
 | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: |
@@ -103,11 +103,7 @@ To test pure predictive skill, a 71-week, 1-step-ahead expanding window backtest
 | Model 3 | 11.37134 | 466.3588 | 347.9964 | 0.02618351 | 1.441482 | 0.1525857 | 1.004965 | 
 
 <img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/204a9504-c635-4da4-91d6-da7087974ee2" />
-While Model 1 and 3 perform adequately on average errors, Model 2 ARIMA(0,2,1) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). Given anticipated macroeconomic shocks, Model 2 is explicitly chosen as the production engine because it relies on momentum acceleration rather than historical drift, aggressively mapping structural breaks.
-
-### 8. Stochastic Risk Modeling (Monte Carlo Simulation) 
-With Model 2 validated as the premier engine, it is deployed to map future tail-risk. 1,000 parallel market universes are simulated for a 12-week horizon. To perform a visual Out-of-Sample VaR (Value at Risk) audit, the actual unseen market values from the test set are plotted directly over the simulation.
-<img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/ba44bdf1-69e5-4255-afbf-bd74df39ec94" /> > **The Fat Tail Reality:** The 90% confidence interval successfully bounds the Nifty 50's trajectory across the majority of the horizon. However, the momentary, violent breach of the lower boundary by the actual market data mathematically demonstrates the **fat-tailed** nature of equity markets. It visually proves that while ARIMA models effectively map standard variance, real-world structural market crashes exceed standard Gaussian probabilities, justifying the need for advanced Extreme Value Theory (EVT) in future iterations.
+While Model 1 and 3 perform adequately on average errors, Model 2 ARIMA(0,2,1) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). It adapted much more efficiently to recent macroeconomic shocks. 
 
 **Language:** R
 **Libraries:** `forecast`, `tseries`
