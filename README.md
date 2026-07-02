@@ -105,6 +105,7 @@ To evaluate true predictive skill, a 71-week walk-forward backtest was executed 
 <img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/204a9504-c635-4da4-91d6-da7087974ee2" />
 While Model 1 and 3 perform adequately on average errors, Model 2 ARIMA(0,2,1) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). It adapted much more efficiently to recent macroeconomic shocks. 
 
+fdef
 
 **Language:** R
 **Libraries:** `forecast`, `tseries`
