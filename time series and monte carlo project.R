@@ -2,7 +2,6 @@
 library(tseries)   
 library(forecast)
 
-#loading the data 
 data <- read.csv(file.choose(),header=TRUE)
 
 par(mfrow=c(1,1))
@@ -21,13 +20,13 @@ plot(diff(diff(data$Adj.Close)),type="l",main="d=2") #d=2
 #h0(null) : data is not stationarity 
 #h1(alternative) : data is stationary 
 
-adf.test(Adj.Close)
+adf.test(data$Adj.Close)
 #p value = 0.7633, which is greater than 0.05
 #non stationary
-adf.test(diff(Adj.Close))
+adf.test(diff(data$Adj.Close))
 #p value = 0.01, which is smaller than 0.05
 #d=1 is stationary
-adf.test(diff(diff(Adj.Close)))
+adf.test(diff(diff(data$Adj.Close)))
 #p value = 0.01, which is smaller than 0.05
 #d=2 is stationary
 
@@ -162,7 +161,6 @@ round(summary(abs(pct_error_model3)),5)
 
 
 #One step forward forecasting and comparison with testdata 
-#loading the testdata
 testdata <- read.csv(file.choose(),header=TRUE)
 
 #Forecasting for model 1 : Arima(0,1,0)
@@ -237,7 +235,12 @@ accuracy(actualvalues,ts(predicted_model3[2:72]))
 #which means it'll capture economic shocks such as geopolitical tensions better than model 3
 
 
+
 #Monte Carlo Simulation 
+
+
+#Simulation using ARIMA(0,2,1)
+
 sim_matrix <- matrix(NA,1000,71)
 set.seed(1000)
 #Generating simulations
@@ -246,27 +249,89 @@ for (i in 1:1000) {
 }
 
 mean_path <- apply(sim_matrix, 2, mean)#mean path 
-lower_95  <- apply(sim_matrix, 2, quantile, probs = 0.05)#lower bound of 90% confidence interval
-upper_95  <- apply(sim_matrix, 2, quantile, probs = 0.95)#upper bound of 90% confidence interval
+lower_90  <- apply(sim_matrix, 2, quantile, probs = 0.05)#lower bound of 90% confidence interval
+upper_90  <- apply(sim_matrix, 2, quantile, probs = 0.95)#upper bound of 90% confidence interval
 par(mfrow=c(1,1))
 #Plotting simulations
 plot(0:71,c(tail(data$Adj.Close,1),sim_matrix[1,]), type = "l",
-     col = rgb(0, 0, 0, 0.05),
+     col = rgb(0.5, 0.5, 0.5, 0.15),
      xlim = c(1, 72), ylim = c(min(sim_matrix), max(sim_matrix)),
-     main = "1,000 Monte Carlo Simulations",
+     main = "1,000 Monte Carlo Simulations(Time Series)",
      xlab = "Time (Weeks)",
      ylab = "Nifty 50 Price")
 for (i in 2:1000) {
-  lines(0:71,c(tail(data$Adj.Close,1),sim_matrix[i,]),col = rgb(0, 0, 0, 0.05))
+  lines(0:71,c(tail(data$Adj.Close,1),sim_matrix[i,]),col = rgb(0.5, 0.5, 0.5, 0.15))
 }
-#Plotting mean and 90% confidence interval path
-lines(0:71,c(tail(data$Adj.Close,1),mean_path),col="green")
-lines(0:71,c(tail(data$Adj.Close,1),lower_95),col="red")
-lines(0:71,c(tail(data$Adj.Close,1),upper_95),col="red")
-lines(0:71,c(tail(data$Adj.Close,1),actualvalues),col="blue")
+#Plotting mean and 90% confidence interval path 
+lines(0:71,c(tail(data$Adj.Close,1),mean_path),col="blue")
+lines(0:71,c(tail(data$Adj.Close,1),lower_90),col="red")
+lines(0:71,c(tail(data$Adj.Close,1),upper_90),col="red")
+lines(0:71,c(tail(data$Adj.Close,1),actualvalues),col="darkgreen")
 legend("topleft", legend = c("Mean Path", "90% Confidence Interval","Actual Value"), 
-       col = c("green", "red","blue"),bty="n",cex=0.75,pch=15)
+       col = c("blue", "red","darkgreen"),bty="n",cex=0.75,pch=15)
 
-#The 90% confidence interval successfully bounds the Nifty 50's value at majority time stamps
-#However, the most critical finding was the breach of lower bound at multiple moments
-#This demonstrates the "fat-tailed" nature of market.
+
+#Simulation using Geometric Brownian Motion 
+
+#Calculating parameters
+log_returns <- diff(log(data$Adj.Close))
+mu <- mean(log_returns, na.rm = TRUE)
+sigma <- sd(log_returns, na.rm = TRUE)
+
+#Setting up simulation matrix 
+gbm_matrix <- matrix(NA,1000,72)
+gbm_matrix[,1] <- tail(data$Adj.Close,1)
+
+#Generating Simulations 
+set.seed(1000)
+for (i in 1:1000) {
+ for (j in 1:71) {
+   z <- rnorm(1)
+   gbm_matrix[i,j+1] <- gbm_matrix[i,j]*exp((mu-(sigma^2)/2)+sigma*z)
+ } 
+}
+
+gbm_mean_path <- apply(gbm_matrix, 2, mean) #mean path
+gbm_upper_90 <- apply(gbm_matrix, 2, quantile, probs = 0.95) #upper bound of 90% confidence interval
+gbm_lower_90 <- apply(gbm_matrix, 2, quantile, probs = 0.05) #lower bound of 90% confidence interval
+
+#Plotting Simulations
+plot(0:71,gbm_matrix[1,],type="l",
+     col = rgb(0.5, 0.5, 0.5, 0.15),
+     xlim = c(1, 72), ylim = c(min(gbm_matrix), max(gbm_matrix)),
+     main = "1,000 Monte Carlo Simulations(Geometric Brownian Motion)",
+     xlab = "Time (Weeks)",
+     ylab = "Nifty 50 Price")
+for (i in 2:1000) {
+  lines(0:71,gbm_matrix[i,],col = rgb(0.5, 0.5, 0.5, 0.15))
+}
+
+#Plotting mean and 90% confidence interval path
+lines(0:71,gbm_mean_path,col="purple")
+lines(0:71,gbm_lower_90,col="darkorange")
+lines(0:71,gbm_upper_90,col="darkorange")
+lines(0:71,c(tail(data$Adj.Close,1),actualvalues),col="darkgreen")
+legend("topleft", legend = c("Mean Path", "90% Confidence Interval","Actual Value"), 
+       col = c("purple", "darkorange","darkgreen"),bty="n",cex=0.75,pch=15)
+
+
+#Comparing the mean paths and confidence intervals 
+plot(0:71,c(tail(data$Adj.Close,1),actualvalues),type="l",lwd=1.5,
+     col="darkgreen",
+     xlim = c(1, 72), ylim = c(min(gbm_lower_90), max(gbm_upper_90)),
+     xlab = "Time (Weeks)",
+     ylab = "Nifty 50 Price" )
+lines(0:71,gbm_lower_90,col="darkorange")
+lines(0:71,gbm_upper_90,col="darkorange") 
+lines(0:71,c(tail(data$Adj.Close,1),lower_90),col="red")
+lines(0:71,c(tail(data$Adj.Close,1),upper_90),col="red")
+lines(0:71,gbm_mean_path,col="purple")
+lines(0:71,c(tail(data$Adj.Close,1),mean_path),col="blue")
+legend("topleft", legend = c("90% Confidence Interval (Geometric Brownian Motion)","90% Confidence Interval (Time Series)","Mean Path (Geometric Brownian Motion)","Mean Path (Time Series)","Actual Value"), 
+       col = c("darkorange","red","purple","blue","darkgreen"),bty="n",cex=0.75,pch=15)
+
+#Comparing mean paths of gbm and time series 
+accuracy(actualvalues,mean_path)
+accuracy(actualvalues,gbm_mean_path[2:72])
+
+#Clearly time series mean path out performs gbm in every parameter
