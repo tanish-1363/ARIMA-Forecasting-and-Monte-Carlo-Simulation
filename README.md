@@ -1,5 +1,9 @@
 This project is a quantitative forecasting for the Nifty 50 Index. The objective was not just to predict a single future price, but to map out market variance and test how autoregressive integrated moving average (ARIMA) models handle real-world tail risk. To ensure the backtesting remained strictly honest, the data was separated to prevent any forward-looking bias.
 
+**Language:** R
+
+**Libraries:** `forecast`, `tseries`
+
 ### Data Strategy 
 To rigorously test the model's out-of-sample predictive power, the dataset was strictly partitioned to prevent any forward-looking bias (look-ahead leakage).
 * **Training Dataset (`nifty_data.csv`):** January 1, 2008 — December 31, 2024. 17 years of weekly data used exclusively to train the model, capture market movements, and determine parameters.
@@ -104,7 +108,3 @@ To evaluate true predictive skill, a 71-week walk-forward backtest was executed 
 
 <img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/204a9504-c635-4da4-91d6-da7087974ee2" />
 While Model 1 and 3 perform adequately on average errors, Model 2 ARIMA(0,2,1) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). It adapted much more efficiently to recent macroeconomic shocks. 
-
-
-**Language:** R
-**Libraries:** `forecast`, `tseries`
