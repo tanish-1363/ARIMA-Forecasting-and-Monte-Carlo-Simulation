@@ -235,9 +235,7 @@ accuracy(actualvalues,ts(predicted_model3[2:72]))
 #which means it'll capture economic shocks such as geopolitical tensions better than model 3
 
 
-
 #Monte Carlo Simulation 
-
 
 #Simulation using ARIMA(0,2,1)
 
@@ -329,9 +327,12 @@ lines(0:71,gbm_mean_path,col="purple")
 lines(0:71,c(tail(data$Adj.Close,1),mean_path),col="blue")
 legend("topleft", legend = c("90% Confidence Interval (Geometric Brownian Motion)","90% Confidence Interval (Time Series)","Mean Path (Geometric Brownian Motion)","Mean Path (Time Series)","Actual Value"), 
        col = c("darkorange","red","purple","blue","darkgreen"),bty="n",cex=0.75,pch=15)
+#The lower bound of time series confidence interval is breached multiple times in the starting 15 weeks time frame
+#but later on as interval widens, no breach was observed
+#GBM created extremely wide confidence interval 
 
 #Comparing mean paths of gbm and time series 
 accuracy(actualvalues,mean_path)
 accuracy(actualvalues,gbm_mean_path[2:72])
 
-#Clearly time series mean path out performs gbm in every parameter
+#Time series mean path out performs gbm in every parameter
