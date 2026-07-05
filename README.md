@@ -109,15 +109,33 @@ To evaluate true predictive skill, a 71-week walk-forward backtest was executed 
 <img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/204a9504-c635-4da4-91d6-da7087974ee2" />
 While Model 1 and 3 perform adequately on average errors, Model 2 ARIMA(0,2,1) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). It adapted much more efficiently to recent macroeconomic shocks. 
 
-
+### 8. Measuring Tail Risk (Monte Carlo Simulation)
+While Step 7 established that the ARIMA(0,2,1) model predicts the average future path with a MAPE of 1.43%, a single predicted trajectory is insufficient for risk management. To properly estimate downside risk, a Monte Carlo simulation was executed.
+By generating 1,000 possible future market paths over the 71-week blind horizon, a 90% confidence boundary was calculated alongside the mean expected path. 
 <img width="1059" height="571" alt="image" src="https://github.com/user-attachments/assets/6941e5d3-6aad-4c34-8b07-e41d74ad268f" />
 
+### EXTRA: Time Series vs Geometric Brownian Motion
+To benchmark the ARIMA model's risk boundaries, it was compared to Geometric Brownian Motion (GBM) model. GBM assumes the stock market is completely random and operates with zero historical memory. A 1,000-path simulation was generated using GBM to calculate its respective 90% confidence interval and mean path.
 <img width="1059" height="571" alt="image" src="https://github.com/user-attachments/assets/7e131cc0-eee6-4f55-954b-379e0cd1fa18" />
 
+# Observations 
+90% Confidence interval and mean paths calculated using Time Series and GBM were compared. 
 <img width="1059" height="571" alt="image" src="https://github.com/user-attachments/assets/596f6252-6fb7-4889-8e9b-986adb0a31d9" />
 
+i). Risk Boundaries
+Because GBM assumes pure randomness, it created extremely wide risk boundaries. In contrast, the ARIMA model produced a much tighter interval.
+
+ii). The Early Breach 
+The actual market data breached the ARIMA model's lower boundary multiple times during the first 13 weeks, but remained safely inside the interval later. This was because short-term predictions generate tight boundaries that are easily broken by sudden macro-shocks. However, as the forecast extends further into the future, the boundaries naturally widen to absorb that volatility.
+
+iii). Accuracy Check
+While the mean paths for both models appear visually similar, running an accuracy check proves that the Time Series outperformed the GBM baseline.
 
 | | Mean Error | Root Mean Square Error | Mean Absolute Error | Mean Percentage Error | Mean Absolute Percentage Error |
 | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | 
 | GBM | 446.0198 | 1227.057 | 853.8994 | 1.735488 | 3.37181 |
 | TS | 353.497 | 1157.793 | 835.8361 | 1.386532 | 3.324255 |
+
+ 
+
+
