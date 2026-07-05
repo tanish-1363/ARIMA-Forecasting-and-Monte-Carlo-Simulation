@@ -108,3 +108,16 @@ To evaluate true predictive skill, a 71-week walk-forward backtest was executed 
 
 <img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/204a9504-c635-4da4-91d6-da7087974ee2" />
 While Model 1 and 3 perform adequately on average errors, Model 2 ARIMA(0,2,1) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). It adapted much more efficiently to recent macroeconomic shocks. 
+
+
+<img width="1059" height="571" alt="image" src="https://github.com/user-attachments/assets/6941e5d3-6aad-4c34-8b07-e41d74ad268f" />
+
+<img width="1059" height="571" alt="image" src="https://github.com/user-attachments/assets/7e131cc0-eee6-4f55-954b-379e0cd1fa18" />
+
+<img width="1059" height="571" alt="image" src="https://github.com/user-attachments/assets/596f6252-6fb7-4889-8e9b-986adb0a31d9" />
+
+
+| | Mean Error | Root Mean Square Error | Mean Absolute Error | Mean Percentage Error | Mean Absolute Percentage Error |
+| :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | 
+| GBM | 446.0198 | 1227.057 | 853.8994 | 1.735488 | 3.37181 |
+| TS | 353.497 | 1157.793 | 835.8361 | 1.386532 | 3.324255 |
