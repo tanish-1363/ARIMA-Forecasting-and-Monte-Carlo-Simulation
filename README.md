@@ -4,22 +4,22 @@ This project is a quantitative forecasting for the Nifty 50 Index. The objective
 
 **Libraries:** `forecast`, `tseries`
 
-### Data Strategy 
+## Data Strategy 
 To rigorously test the model's out-of-sample predictive power, the dataset was strictly partitioned to prevent any forward-looking bias (look-ahead leakage).
 * **Training Dataset (`nifty_data.csv`):** January 1, 2008 — December 31, 2024. 17 years of weekly data used exclusively to train the model, capture market movements, and determine parameters.
 * **Testing Dataset (`nifty_test_data.csv`):** January 7, 2025 — May 8, 2026. 71 weeks of blind data utilized to test the model's appropriateness and predictiveness on an unseen timeline.
 ---
 
-### 1. Visualizing the Baseline
+## 1. Visualizing the Baseline
 The process began by plotting the raw weekly Nifty 50 data. As expected, the stock market trends upwards over time and exhibits periods of high volatility which indicates the data is "non-stationary"—meaning it is not yet stable enough to build a reliable forecasting model.
 <img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/b391616d-8cb9-4fd5-bdfe-a06d04ac1048" />
 
-### 2. Stabilizing the Data (Differencing: $d=1$ and $d=2$) 
+## 2. Stabilizing the Data (Differencing: $d=1$ and $d=2$) 
 To prepare the data for modeling, the trend component must be neutralized through differencing. The first-order difference ($d=1$) and the second-order difference ($d=2$) were analyzed.
 
 <img width="1603" height="795" alt="image" src="https://github.com/user-attachments/assets/4e433ec3-e9f2-4b88-b19d-caec52a7e0e9" />
 
-### 3. Mathematical Stationarity (ADF Testing) 
+## 3. Mathematical Stationarity (ADF Testing) 
 Visual confirmation is insufficient for algorithmic modeling. The Augmented Dickey-Fuller (ADF) test is deployed across the raw data ($d=0$), first difference ($d=1$), and second difference ($d=2$) to mathematically prove at which level the data achieves strict stationarity.
 
 |  | d=0 | d=1 | d=2 |
@@ -28,7 +28,7 @@ Visual confirmation is insufficient for algorithmic modeling. The Augmented Dick
 
 The raw data fails the stationarity threshold ($P > 0.05$). However, differencing at both $d=1$ and $d=2$ yields a p-value of 0.01, mathematically rejecting the null hypothesis and confirming strict stationarity for modeling.
 
-### 4. Model Fitting 
+## 4. Model Fitting 
 
 **i) ACF & PACF Analysis:** Autocorrelation and Partial Autocorrelation plots are generated for both $d=1$ and $d=2$ to manually identify potential parameter bounds.
 <img width="1624" height="850" alt="image" src="https://github.com/user-attachments/assets/dc54e189-b6f6-4320-8b8b-8df30d4ba0a5" />
@@ -66,7 +66,7 @@ Three candidate models are selected for out-of-sample testing:
 * **Model 2:** $ARIMA(0,2,1)$
 * **Model 3:** $ARIMA(2,1,0)$ with drift
 
-### 5. Residual Diagnostics (Ljung-Box Test) 
+## 5. Residual Diagnostics (Ljung-Box Test) 
 A forecasting model is only valid if it extracts all available market signal. The Ljung-Box test is applied to the residuals of the candidate models across lags 1 through 12.
 
 | | Pvalue Model 1 | Pvalue Model 2 | Pvalue Model 3 |
@@ -86,7 +86,7 @@ A forecasting model is only valid if it extracts all available market signal. Th
 
 Across all 12 lags, every p-value vastly exceeds the 0.05 threshold. This verifies that the remaining errors are purely white noise, confirming the models are mathematically sound and no predictive signal has been left on the table.
 
-### 6. Accuracy Check  
+## 6. Accuracy Check  
 Before testing against unseen future data, the models' accuracy on the historical training data was assessed and the absolute percentage error for each model is calculated, summarized, and plotted.
 <img width="1878" height="864" alt="image" src="https://github.com/user-attachments/assets/5763abd4-3317-46ed-bf1c-eb8d5d940054" /> 
 | | Min | 1st Quartile | Median | Mean | 3rd Quartile | Max | 
@@ -97,7 +97,7 @@ Before testing against unseen future data, the models' accuracy on the historica
 
 While average errors remained similar across all candidates, an analysis of the "Max" column reveals that Model 2 [ARIMA(0,2,1)] handled extreme historical market shocks significantly better than the alternatives.
 
-### 7. Out-of-Sample Backtesting (2025 - 2026 Data) 
+## 7. Out-of-Sample Backtesting (2025 - 2026 Data) 
 To evaluate true predictive skill, a 71-week walk-forward backtest was executed across the blind dataset `nifty_test_data.csv`. The models organically ingested new data step-by-step.
 
 | | Mean Error | Root Mean Square Error | Mean Absolute Error | Mean Percentage Error | Mean Absolute Percentage Error | ACF 1 | Theil's U |
@@ -109,10 +109,11 @@ To evaluate true predictive skill, a 71-week walk-forward backtest was executed 
 <img width="1857" height="808" alt="image" src="https://github.com/user-attachments/assets/204a9504-c635-4da4-91d6-da7087974ee2" />
 While Model 1 and 3 perform adequately on average errors, Model 2 ARIMA(0,2,1) achieves the superior Theil's U (0.985) and the lowest MAPE (1.433%). It adapted much more efficiently to recent macroeconomic shocks. 
 
-### 8. Measuring Tail Risk (Monte Carlo Simulation)
+## 8. Measuring Tail Risk (Monte Carlo Simulation)
 While Step 7 established that the ARIMA(0,2,1) model predicts the average future path with a MAPE of 1.43%, a single predicted trajectory is insufficient for risk management. To properly estimate downside risk, a Monte Carlo simulation was executed.
 By generating 1,000 possible future market paths over the 71-week blind horizon, a 90% confidence boundary was calculated alongside the mean expected path. 
 <img width="1059" height="571" alt="image" src="https://github.com/user-attachments/assets/6941e5d3-6aad-4c34-8b07-e41d74ad268f" />
+
 
 ### EXTRA: ARIMA vs Geometric Brownian Motion
 To benchmark the ARIMA model's risk boundaries, it was compared to a Geometric Brownian Motion (GBM) model. GBM assumes the stock market is completely random and operates with zero historical memory. A 1,000-path simulation was generated using GBM to calculate its respective 90% confidence interval and mean path.
@@ -122,11 +123,11 @@ To benchmark the ARIMA model's risk boundaries, it was compared to a Geometric B
 The 90% confidence intervals and mean paths calculated by both the ARIMA and GBM models were overlaid with the actual unseen market data for comparison.
 <img width="1059" height="571" alt="image" src="https://github.com/user-attachments/assets/596f6252-6fb7-4889-8e9b-986adb0a31d9" />
 
-i). Risk Boundaries - Because GBM assumes pure randomness, it created extremely wide risk boundaries. In contrast, the ARIMA model produced a much tighter interval.
+**i). Risk Boundaries -** Because GBM assumes pure randomness, it created extremely wide risk boundaries. In contrast, the ARIMA model produced a much tighter interval.
 
-ii). The Early Breach - The actual market data breached the ARIMA model's lower boundary multiple times during the first 13 weeks, but remained safely inside the interval later. This occurs because short-term predictions generate tight boundaries that are easily broken by sudden macro-shocks. However, as the forecast extends further into the future, the boundaries naturally widen to account for compounding uncertainty and absorb that volatility.
+**ii). The Early Breach -** The actual market data breached the ARIMA model's lower boundary multiple times during the first 13 weeks, but remained safely inside the interval later. This occurs because short-term predictions generate tight boundaries that are easily broken by sudden macro-shocks. However, as the forecast extends further into the future, the boundaries naturally widen to account for compounding uncertainty and absorb that volatility.
 
-iii). Accuracy Check - While the mean paths for both models appear visually similar, running an accuracy check proves that the ARIMA model outperformed the GBM baseline.
+**iii). Accuracy Check -** While the mean paths for both models appear visually similar, running an accuracy check proves that the ARIMA model outperformed the GBM baseline.
 
 | | Mean Error | Root Mean Square Error | Mean Absolute Error | Mean Percentage Error | Mean Absolute Percentage Error |
 | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | 
