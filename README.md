@@ -118,7 +118,7 @@ By generating 1,000 possible future market paths over the 71-week blind horizon,
 To benchmark the ARIMA model's risk boundaries, it was compared to Geometric Brownian Motion (GBM) model. GBM assumes the stock market is completely random and operates with zero historical memory. A 1,000-path simulation was generated using GBM to calculate its respective 90% confidence interval and mean path.
 <img width="1059" height="571" alt="image" src="https://github.com/user-attachments/assets/7e131cc0-eee6-4f55-954b-379e0cd1fa18" />
 
-##### Observations 
+#### Observations 
 90% Confidence interval and mean paths calculated using Time Series and GBM were compared. 
 <img width="1059" height="571" alt="image" src="https://github.com/user-attachments/assets/596f6252-6fb7-4889-8e9b-986adb0a31d9" />
 
